@@ -10,25 +10,27 @@ import urllib
 import sys
 
 # Configuration parameters, change these to match with your tp-link wifi router.
-ip = ''
-username = ''
-password = ''
+ip = '192.168.0.100'
+username = 'admin'
+password = 'admin'
 
 # Reboot old tp-link, tested with TL-WR941ND
 #requests.get('http://%s/userRpm/SysRebootRpm.htm?Reboot=Reboot' %ip, auth=(username, password))
 
 # Reboot new tp-link, tested with ArcherC9
 def reboot_tplink(ip, username, password):
-	full_string = username + ":" + password
-	url = 'http://%s/userRpm/SysRebootRpm.htm?Reboot=Reboot' %ip
-	cookie = urllib.quote("Basic" + ' ' + base64.b64encode(full_string))
-	cookie = dict(Authorization=cookie)
-	headers = {
-		"Host": ip,
-		"Referer": "http://%s/userRpm/SysRebootRpm.htm" %ip
-	}
-	requests.get(url, cookies=cookie, headers=headers)
-	return
+  full_string = username + ":" + password
+  url = 'http://%s/userRpm/SysRebootRpm.htm?Reboot=Reboot' %ip
+  auth_info = "Basic " + base64.b64encode(full_string)
+  cookie = urllib.quote(auth_info)
+  cookie = dict(Authorization=cookie)
+  headers = {
+  	"Host": ip,
+  	"Referer": "http://%s/userRpm/SysRebootRpm.htm" %ip,
+    "Authorization":auth_info
+  }
+  resp = requests.get(url, cookies=cookie, headers=headers )
+  print ""+str(resp)
 
 # Execute reboot
 try:
